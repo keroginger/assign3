@@ -79,11 +79,16 @@ void draw(){
                    
            }
              }
+             if(gameState==GAME_LOSE){
+               for(int col=0; col<nSlot; col++){
+                 for(int row=0; row<nSlot; row++){
+                    showSlot(col,row,slot[col][row]);
+                 }
+             }
             
+        }    
            
-    println(clickCount+flagCount)  ;     
-    println(gameState);
-    
+   
           // -----------------------------------
           break;
     case GAME_WIN:
@@ -99,7 +104,7 @@ void draw(){
   }
 }
 
-public int countNeighborBombs(int col,int row){
+int countNeighborBombs(int col,int row){
   // -------------- Requirement B ---------
   int count=0;
        if(slot[col][row]==SLOT_BOMB){
@@ -224,9 +229,15 @@ void mousePressed(){
           for(int row=0; row<nSlot; row++){
            if(mouseX>=ix+col*SLOT_SIZE&&mouseX<ix+(col+1)*SLOT_SIZE){
              if(mouseY>=iy+row*SLOT_SIZE&&mouseY<iy+(row+1)*SLOT_SIZE){
-                if(mouseButton==RIGHT){
+               if(slot[col][row] == SLOT_OFF ){
+               slot[col][row] = 20;
+               showSlot(col, row, SLOT_SAFE);
+               clickCount++;   
+               }
+               if(mouseButton==RIGHT){
                 slot[col][row] = SLOT_FLAG; 
                 showSlot(col,row,SLOT_FLAG);
+                //flag[col][row] != flag[col][row];
                 flagCount++;
                 clickCount++;
                 }
@@ -234,6 +245,11 @@ void mousePressed(){
                 gameState = GAME_LOSE;
                 slot[col][row] = SLOT_DEAD;                
                 showSlot(col,row,SLOT_DEAD);
+                for(col=0; col<nSlot; col++){
+                 for(row=0; row<nSlot; row++){
+                    showSlot(col,row,slot[col][row]);
+                 }
+                }
                /* for(int n=0; n<nSlot; n++){
                   for(int m=0; m<nSlot; m++){
                   showSlot(n,m,SLOT_DEAD);
@@ -241,14 +257,24 @@ void mousePressed(){
                 }*/
                
                  }
-               if(slot[col][row] == SLOT_OFF){
-                slot[col][row] = SLOT_SAFE;
-               showSlot(col, row, SLOT_SAFE);
-               clickCount++;     
+               
+                 
           }
          
                
-      
+         if(gameState==GAME_LOSE){
+               for(col=0; col<nSlot; col++){
+                 for(row=0; row<nSlot; row++){
+                   if(slot[col][row] == SLOT_DEAD){ 
+                   showSlot(col,row,SLOT_DEAD);
+                   }
+                   else if(slot[col][row] == SLOT_OFF){
+                   showSlot(col,row,SLOT_SAFE);
+                   }
+                 }
+             }
+            
+        }    
       
       
            }
@@ -260,7 +286,7 @@ void mousePressed(){
     // -------------------------
     
   }
-}
+
 
 // press enter to start
 void keyPressed(){
