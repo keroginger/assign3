@@ -112,7 +112,7 @@ int countNeighborBombs(int col,int row){
        }
       for(int i=-1; i<=1; i++){
         for(int j=-1; j<=1; j++){
-          if((i!=0 || j!=0) && (col+i)>=0 && (col+i)<=3 && (row+j)>=0 && (row+j)<=3){
+          if((col+i)>=0 && (col+i)<=3 && (row+j)>=0 && (row+j)<=3 && (i!=0 || j!=0) ){
             if(slot[col+i][row+j]== SLOT_BOMB || slot[col+i][row+j]==SLOT_FLAG_BOMB || slot[col+i][row+j]==SLOT_DEAD){
               count++;}
             else if(slot[col+i][row+j]==SLOT_SAFE){
