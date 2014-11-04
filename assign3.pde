@@ -53,7 +53,7 @@ void draw(){
     case GAME_START:
           background(180);
           image(bg,0,0,640,480);
-          textFont( loadFont("font/Square_One.ttf") ,16);
+          textFont(loadFont("font/Square_One.ttf"),16);
           fill(0);
           text("Choose # of bombs to continue:",10,width/3-24);
           int spacing = width/9;
@@ -69,6 +69,7 @@ void draw(){
           //---------------- put you code here ----
              for(int col=0; col<nSlot; col++){
                   for(int row=0; row<nSlot; row++){
+                 //   flagSlot[col][row] =false;
                     if((slot[col][row]==SLOT_FLAG || slot[col][row] ==SLOT_SAFE)){
                        if(slot[col][row] !=SLOT_OFF){
                          if(clickCount>=totalSlots){
@@ -92,12 +93,12 @@ void draw(){
           // -----------------------------------
           break;
     case GAME_WIN:
-          textFont( loadFont("font/Square_One.ttf") ,18);
+          textFont(loadFont("font/Square_One.ttf"),18);
           fill(0);
           text("YOU WIN !!",width/3,30);
           break;
     case GAME_LOSE:
-          textFont( loadFont("font/Square_One.ttf") ,18);
+          textFont(loadFont("font/Square_One.ttf"),18);
           fill(0);
           text("YOU LOSE !!",width/3,30);
           break;
@@ -112,7 +113,7 @@ int countNeighborBombs(int col,int row){
        }
       for(int i=-1; i<=1; i++){
         for(int j=-1; j<=1; j++){
-          if((col+i)>=0 && (col+i)<=3 && (row+j)>=0 && (row+j)<=3 && (i!=0 || j!=0) ){
+          if((i!=0 || j!=0) && (col+i)>=0 && (col+i)<=3 && (row+j)>=0 && (row+j)<=3){
             if(slot[col+i][row+j]== SLOT_BOMB || slot[col+i][row+j]==SLOT_FLAG_BOMB || slot[col+i][row+j]==SLOT_DEAD){
               count++;}
             else if(slot[col+i][row+j]==SLOT_SAFE){
@@ -225,23 +226,22 @@ void mousePressed(){
        mouseY >= iy && mouseY <= iy+sideLength){
     
     // --------------- put you code here -------     
+     /* for(int m=0;m<nSlot;m++){
+         for(int n=0;n<nSlot;n++){
+          flagSlot[m][n]=false; 
+         }
+      }*/
      for(int col=0; col<nSlot; col++){
           for(int row=0; row<nSlot; row++){
            if(mouseX>=ix+col*SLOT_SIZE&&mouseX<ix+(col+1)*SLOT_SIZE){
              if(mouseY>=iy+row*SLOT_SIZE&&mouseY<iy+(row+1)*SLOT_SIZE){
-               if(slot[col][row] == SLOT_OFF ){
-               slot[col][row] = 20;
-               showSlot(col, row, SLOT_SAFE);
-               clickCount++;   
-               }
-               if(mouseButton==RIGHT){
-                slot[col][row] = SLOT_FLAG; 
-                showSlot(col,row,SLOT_FLAG);
-                //flag[col][row] != flag[col][row];
-                flagCount++;
-                clickCount++;
-                }
-                else if (slot[col][row] == SLOT_BOMB){
+                 if(mouseButton==LEFT){
+                     if(slot[col][row] == SLOT_OFF){
+                       slot[col][row] = 20;
+                       showSlot(col, row, SLOT_SAFE);
+                       clickCount++;   
+                       }
+                       if (slot[col][row] == SLOT_BOMB){
                 gameState = GAME_LOSE;
                 slot[col][row] = SLOT_DEAD;                
                 showSlot(col,row,SLOT_DEAD);
@@ -257,6 +257,24 @@ void mousePressed(){
                 }*/
                
                  }
+                       
+                 }
+             if(mouseButton==RIGHT){
+                  if(slot[col][row] == SLOT_OFF||slot[col][row] == SLOT_BOMB){
+                   slot[col][row] = SLOT_FLAG; 
+                   showSlot(col,row,SLOT_FLAG);
+                   flagCount++;
+                   clickCount++;
+                  }else if(slot[col][row] == SLOT_FLAG){
+                   slot[col][row] = SLOT_OFF; 
+                   showSlot(col,row,SLOT_OFF);
+                   flagCount--;
+                   clickCount--;
+                   }
+                //flag[col][row] != flag[col][row];
+               
+                }
+               
                
                  
           }
